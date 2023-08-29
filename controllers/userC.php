@@ -1,6 +1,6 @@
 <?php
-require_once '../config.php';
-require_once '../entities/user.php';
+require_once '../../config.php';
+require_once '../../entities/user.php';
 
 class UserController {
     private PDO $pdo;
@@ -28,11 +28,10 @@ class UserController {
         return null;
     }
 
-    public function create(User $user): void {
+    public function register(User $user): void {
         $query = "INSERT INTO users (username, password, role) VALUES (:username, :password, :role)";
         $stmt = $this->pdo->prepare($query);
-        
-        // Hash the password before storing it
+
         $hashedPassword = password_hash($user->getPassword(), PASSWORD_DEFAULT);
 
         $stmt->execute([
@@ -72,5 +71,4 @@ class UserController {
         return null;
     }
     
-    // Additional methods as needed
 }
