@@ -1,6 +1,6 @@
 <?php
-require_once '../config.php';
-require_once '../entities/type.php';
+require_once '../../config.php';
+require_once '../../entities/type.php';
 
 class TypeController {
     private PDO $pdo;
