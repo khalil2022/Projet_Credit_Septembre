@@ -1,32 +1,18 @@
 <?php
-
-require_once '../../controllers/formationC.php';
-require_once '../../controllers/typeC.php';
-
-$typesController = new TypeController();
-$types = $typesController->getAll();
-
-$formationId = $_GET['id'];
-
-$formationController = new FormationController();
-$formation = $formationController->getById($formationId);
-
-if (!$formation) {
-    die('Formation not found');
-}
+require_once '../../controllers/userC.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $title = $_POST['title'];
-  $description = $_POST['description'];
-  $startDate = $_POST['startDate'];
-  $endDate = $_POST['endDate'];
-  $typeId = $_POST['typeId'];
-
-    $formationController->update(new Formation($formation->getId(), $title, $description, $startDate, $endDate, $typeId));
-    header('Location: formations_lists.php'); 
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $role = $_POST['role'];
+   
+    $userController = new UserController();
+    $newUser = new User(null, $username, $password, $role);
+    $userController->register($newUser);
+    
+    header('Location: users_lists.php'); 
     exit();
 }
-
 
 ?>
 
@@ -116,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Forms /</span> Formation</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Forms /</span> User Creation</h4>
 
               <div class="row">
                 
@@ -124,13 +110,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                <div class="col-xxl">
                   <div class="card mb-4">
                     <div class="card-header d-flex align-items-center justify-content-between">
-                      <h5 class="mb-0">Formation</h5>
+                      <h5 class="mb-0">User</h5>
                     <!--   <small class="text-muted float-end">Merged input group</small> -->
                     </div>
                     <div class="card-body">
-                      <form action="update_formation.php?id=<?= $formation->getId() ?>" method="post"  onsubmit="return validateForm()">
-                      <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Title</label>
+                      <form action="create_user.php" method="post" onsubmit="return validateForm()">
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Username</label>
                           <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                               <span id="basic-icon-default-fullname2" class="input-group-text"
@@ -139,85 +125,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               <input
                                 type="text"
                                 class="form-control"
-                                id="title"
-                                placeholder="Title"
+                                id="username"
+                                placeholder="Username"
+                                aria-label="John Doe"
                                 aria-describedby="basic-icon-default-fullname2"
-                                name="title"
-                                value="<?= $formation->getTitle() ?>"
+                                name="username"
                               />
                             </div>
                           </div>
                         </div>
                         <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-icon-default-message">Description</label>
-                          <div class="col-sm-10">
-                          <div class="input-group input-group-merge">
-                            <span id="basic-icon-default-message2" class="input-group-text"
-                              ><i class="bx bx-comment"></i
-                            ></span>
-                            <textarea
-                              id="description"
-                              class="form-control"
-                              placeholder="Description ..."
-                              aria-describedby="basic-icon-default-message2"
-                              name="description"
-                             
-                            ><?= $formation->getDescription() ?></textarea>
-                          </div>
-                          </div>
-                        </div>
-                        <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Start Date</label>
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Password</label>
                           <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                               <span id="basic-icon-default-fullname2" class="input-group-text"
-                                ><i class="bx bx-calendar"></i
+                                ><i class="bx bx-user"></i
                               ></span>
                               <input
-                                type="date"
-                                class="form-control"
-                                id="startdate"
-                                placeholder="Start Date"      
-                                aria-describedby="basic-icon-default-fullname2"
-                                name="startDate"
-                                value="<?= $formation->getStartDate() ?>"
-                              />
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                            aria-describedby="basic-default-password2"
+                            name="password"
+                          />
+                          <span id="basic-default-password2" onclick="togglePassword()" class="input-group-text cursor-pointer"
+                            ><i class="bx bx-hide"></i
+                          ></span>
                             </div>
                           </div>
                         </div>
+
                         <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">End Date</label>
-                          <div class="col-sm-10">
-                            <div class="input-group input-group-merge">
-                              <span id="basic-icon-default-fullname2" class="input-group-text"
-                                ><i class="bx bx-calendar"></i
-                              ></span>
-                              <input
-                                type="date"
-                                class="form-control"
-                                id="enddate"
-                                placeholder="End Date"
-                                aria-describedby="basic-icon-default-fullname2"
-                                name="endDate"
-                                value="<?= $formation->getEndDate() ?>"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row mb-3">
-                        <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Type</label>
+                        <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
-                        <select class="form-select" id="exampleFormControlSelect1" name="typeId" aria-label="Default select example">
-                        <?php foreach ($types as $type): ?>
-                          <option value="<?= $type['id'] ?>"><?= $type['name'] ?></option>
-                        <?php endforeach; ?>
+                        <select class="form-select" id="exampleFormControlSelect1" name="role" aria-label="Default select example">
+                
+                          <option value="admin">Admin</option>
+                          <option value="teacher">Teacher</option>
+                          <option value="student">Student</option>
                         </select>
                       </div>
                       </div>
                      
                         <div class="row justify-content-end">
                           <div class="col-sm-10">
-                            <button type="submit" class="btn btn-warning">Update</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
                           </div>
                         </div>
                       </form>
@@ -230,8 +183,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <!-- / Content -->
 
-           <!-- Footer -->
-           <footer class="content-footer footer bg-footer-theme">
+            <!-- Footer -->
+            <footer class="content-footer footer bg-footer-theme">
               <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
                 <div class="mb-2 mb-md-0">
                   ©
@@ -258,7 +211,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <!-- / Layout wrapper -->
 
- 
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -275,56 +227,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
 
-    <script>
-  function validateForm() {
-    var title = document.getElementById("title").value;
-    var description = document.getElementById("description").value;
-    var startDate = document.getElementById("startdate").value;
-    var endDate = document.getElementById("enddate").value;
-
-    if (title === "") {
-      alert("Title must be filled out");
-      return false; 
-    }
-
-    if (description === "") {
-      alert("Description must be filled out");
-      return false; 
-    }
-
-    if (startDate === "") {
-      alert("Start Date must be filled out");
-      return false; 
-    }
-
-    if (endDate === "") {
-      alert("End Date must be filled out");
-      return false; 
-    }
-
-    var currentDate = new Date();
-    var startDateObj = new Date(startDate);
-    var endDateObj = new Date(endDate);
-
-    if (startDateObj < currentDate) {
-      alert("Start Date must be greater than or equal to the current date");
-      return false; 
-    }
-
-    if (endDateObj <= startDateObj) {
-      alert("End Date must be greater than Start Date");
-      return false; 
-    }
-
-    return true;
-  }
-</script>
-
     <!-- Page JS -->
 
     <script src="assets/js/form-basic-inputs.js"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <script>
+    function togglePassword() {
+        const passwordInput = document.getElementById("basic-default-password12");
+        const passwordIcon = document.getElementById("basic-default-password2");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passwordIcon.innerHTML = '<i class="bx bx-show"></i>';
+        } else {
+            passwordInput.type = "password";
+            passwordIcon.innerHTML = '<i class="bx bx-hide"></i>';
+        }
+    }
+</script>
+
+<script>
+  function validateForm() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+
+    if (username === "") {
+      alert("Username must be filled out");
+      return false; 
+    }
+
+    if (password === "") {
+      alert("Password must be filled out");
+      return false; 
+    }
+    return true;
+  }
+</script>
+
   </body>
 </html>

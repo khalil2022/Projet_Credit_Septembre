@@ -15,6 +15,7 @@ class UserController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     public function getById(int $id): ?User {
         $query = "SELECT * FROM users WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
@@ -69,6 +70,22 @@ class UserController {
         }
 
         return null;
+    }
+
+    public function searchUsers($key) {
+        $sql = "SELECT * FROM users
+                WHERE username LIKE '%$key%' OR role LIKE '%$key%' ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getStatistics(): array {
+        $query = "SELECT DATE(date_join) AS registration_date, COUNT(*) AS user_count FROM users GROUP BY DATE(date_join)";
+        $stmt = $this->pdo->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
 }

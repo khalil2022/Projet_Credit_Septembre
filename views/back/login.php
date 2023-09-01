@@ -88,13 +88,13 @@
               <h4 class="mb-2">Welcome to Web Learn Hub 👋</h4>
               <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-              <form id="formAuthentication" class="mb-3" action="login_user.php" method="POST">
+              <form id="formAuthentication" class="mb-3" action="login_user.php" method="POST" onsubmit="return validateForm()">
                 <div class="mb-3">
                   <label for="email" class="form-label">Username</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="email"
+                    id="username"
                     name="username"
                     placeholder="Enter your username"
                     autofocus
@@ -145,15 +145,7 @@
 
     <!-- / Content -->
 
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
-    </div>
-
+    
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="assets/vendor/libs/jquery/jquery.js"></script>
@@ -168,7 +160,24 @@
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
+    <script>
+  function validateForm() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
 
+
+    if (username === "") {
+      alert("Username must be filled out");
+      return false; 
+    }
+
+    if (password === "") {
+      alert("Password must be filled out");
+      return false; 
+    }
+    return true;
+  }
+</script>
     <!-- Page JS -->
 
     <!-- Place this tag in your head or just before your close body tag. -->

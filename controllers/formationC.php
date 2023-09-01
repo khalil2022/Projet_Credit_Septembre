@@ -170,5 +170,39 @@ class FormationController {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function searchFormations($key) {
+        $sql = "SELECT formations.*,types.name FROM formations
+                 INNER JOIN types ON formations.typeId=types.id
+                WHERE formations.title LIKE '%$key%' OR formations.description LIKE '%$key%' OR types.name LIKE '%$key%' ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function doTri($sortCriteria) {
+        $sortingOptions = [
+            'startDateASC' => 'startDate ASC',
+            'startDateDES' => 'startDate DESC',
+            'endDateASC' => 'endDate ASC',
+            'endDateDES' => 'endDate DESC'
+        ];
+    
+        if (isset($sortingOptions[$sortCriteria])) {
+            $sql = "SELECT formations.*, types.name 
+                    FROM formations
+                    INNER JOIN types ON formations.typeId = types.id
+                    ORDER BY " . $sortingOptions[$sortCriteria];
+    
+            $stmt = $this->pdo->query($sql);
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return $this->getAll();
+        }
+
+    }
     
 }

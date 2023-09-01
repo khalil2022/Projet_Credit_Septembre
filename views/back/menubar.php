@@ -1,3 +1,9 @@
+<?php 
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
+?>
+ 
  <!-- Menu -->
 
  <aside
@@ -38,7 +44,7 @@
     <li class="menu-header small text-uppercase">
         <span class="menu-header-text">Users</span>
     </li>
-    <li class="menu-item <?= isPageActive('users_lists.php') ? 'active' : '' ?>">
+    <li class="menu-item <?= isPageActive('users_lists.php') || isPageActive('create_user.php') ? 'active' : '' ?>">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-dock-top"></i>
             <div data-i18n="Account Settings">User Management</div>
@@ -50,7 +56,7 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="createaccount.php" class="menu-link">
+                <a href="create_user.php" class="menu-link">
                     <div data-i18n="Notifications">Create Account</div>
                 </a>
             </li>

@@ -108,8 +108,40 @@ $formations = $formationsController->getAll();
               <!-- Hoverable Table rows -->
               <div class="card">
                 <h5 class="card-header">Formations</h5>
+                <div class="card-body demo-vertical-spacing demo-only-element">
+                      
+                      <div class="row ">
+                      <div class="col-md-7">
+                      <div class="input-group input-group-merge ">
+                        <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Search..."
+                          aria-label="Search..."
+                          aria-describedby="basic-addon-search31"
+                          id="search"
+                          onkeyup="doSearch()"
+                        />
+</div>
+</div>
+<div class="col-md-3">
+</div>
+<div class="col-md-2">
+<div class="input-group input-group-merge ">
+                        <select class="form-select" id="exampleFormControlSelect1" onchange="doTri()"aria-label="Default select example">
+                
+                          <option value="all">All</option>
+                          <option value="startDateASC">StartDate ASC</option>
+                          <option value="startDateDES">StartDate DES</option>
+                          <option value="endDateASC">EndDate ASC</option>
+                          <option value="endDateDES">EndDate Des</option>
+                        </select>
+                      </div>
+                      </div>
+                      </div>
                 <div class="table-responsive text-nowrap">
-                  <table class="table table-hover">
+                  <table class="table table-hover"  id="show">
                     <thead>
                       <tr>
                         <th>Title</th>
@@ -127,7 +159,7 @@ $formations = $formationsController->getAll();
                         <td><?= $formation['description'] ?></td>
                         <td><?= $formation['startDate'] ?></td>
                         <td><?= $formation['endDate'] ?></td>
-                        <td><?= $formation['name'] ?></td>
+                        <td><span class="badge rounded-pill bg-label-primary"><?= $formation['name'] ?></span></td>
                        
               
                         <td>
@@ -168,26 +200,9 @@ $formations = $formationsController->getAll();
                     document.write(new Date().getFullYear());
                   </script>
                   , made with ❤️ by
-                  <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
+                  Khalil Jeber
                 </div>
-                <div>
-                  <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-                  <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-
-                  <a
-                    href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Documentation</a
-                  >
-
-                  <a
-                    href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Support</a
-                  >
-                </div>
+                
               </div>
             </footer>
             <!-- / Footer -->
@@ -204,14 +219,7 @@ $formations = $formationsController->getAll();
     </div>
     <!-- / Layout wrapper -->
 
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
-    </div>
+
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -227,6 +235,32 @@ $formations = $formationsController->getAll();
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
+
+    <script >
+       function doSearch(){
+        var sch=$("#search").val();
+        $.ajax({
+                url: "search_formation.php",
+                data:{transfer: sch},
+                type: "POST",
+                success: function(data){
+                    $('#show').html(data).show();
+                        }
+                    });
+      }
+
+      function doTri() {
+    var selectedCriteria = $("#exampleFormControlSelect1").val();
+    $.ajax({
+        url: "tri_formation.php", 
+        data: { sortCriteria: selectedCriteria },
+        type: "POST",
+        success: function (data) {
+            $('#show').html(data).show();
+        }
+    });
+}
+    </script>
 
     <!-- Page JS -->
 

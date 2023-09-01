@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!--   <small class="text-muted float-end">Merged input group</small> -->
                     </div>
                     <div class="card-body">
-                      <form action="create_formation.php" method="post">
+                      <form action="create_formation.php" method="post" onsubmit="return validateForm()">
                         <div class="row mb-3">
                           <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Title</label>
                           <div class="col-sm-10">
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               <input
                                 type="text"
                                 class="form-control"
-                                id="basic-icon-default-fullname"
+                                id="title"
                                 placeholder="Title"
                                
                                 aria-describedby="basic-icon-default-fullname2"
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               ><i class="bx bx-comment"></i
                             ></span>
                             <textarea
-                              id="basic-icon-default-message"
+                              id="description"
                               class="form-control"
                               placeholder="Description ..."
                               aria-describedby="basic-icon-default-message2"
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               <input
                                 type="date"
                                 class="form-control"
-                                id="basic-icon-default-fullname"
+                                id="startdate"
                                 placeholder="Title"
                                
                                 aria-describedby="basic-icon-default-fullname2"
@@ -186,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               <input
                                 type="date"
                                 class="form-control"
-                                id="basic-icon-default-fullname"
+                                id="enddate"
                                 placeholder="Title"
                                
                                 aria-describedby="basic-icon-default-fullname2"
@@ -221,8 +221,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <!-- / Content -->
 
-            <!-- Footer -->
-            <footer class="content-footer footer bg-footer-theme">
+           <!-- Footer -->
+           <footer class="content-footer footer bg-footer-theme">
               <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
                 <div class="mb-2 mb-md-0">
                   ©
@@ -230,26 +230,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     document.write(new Date().getFullYear());
                   </script>
                   , made with ❤️ by
-                  <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
+                  Khalil Jeber
                 </div>
-                <div>
-                  <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-                  <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-
-                  <a
-                    href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Documentation</a
-                  >
-
-                  <a
-                    href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Support</a
-                  >
-                </div>
+                
               </div>
             </footer>
             <!-- / Footer -->
@@ -266,14 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <!-- / Layout wrapper -->
 
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
-    </div>
+   
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -289,6 +265,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
+
+    <script>
+  function validateForm() {
+    var title = document.getElementById("title").value;
+    var description = document.getElementById("description").value;
+    var startDate = document.getElementById("startdate").value;
+    var endDate = document.getElementById("enddate").value;
+
+    if (title === "") {
+      alert("Title must be filled out");
+      return false; 
+    }
+
+    if (description === "") {
+      alert("Description must be filled out");
+      return false; 
+    }
+
+    if (startDate === "") {
+      alert("Start Date must be filled out");
+      return false; 
+    }
+
+    if (endDate === "") {
+      alert("End Date must be filled out");
+      return false; 
+    }
+
+    var currentDate = new Date();
+    var startDateObj = new Date(startDate);
+    var endDateObj = new Date(endDate);
+
+    if (startDateObj < currentDate) {
+      alert("Start Date must be greater than or equal to the current date");
+      return false; 
+    }
+
+    if (endDateObj <= startDateObj) {
+      alert("End Date must be greater than Start Date");
+      return false; 
+    }
+
+    return true;
+  }
+</script>
+
 
     <!-- Page JS -->
 

@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!--   <small class="text-muted float-end">Merged input group</small> -->
                     </div>
                     <div class="card-body">
-                      <form action="update_type.php?id=<?= $type->getId() ?>" method="post">
+                      <form action="update_type.php?id=<?= $type->getId() ?>" method="post" onsubmit="return validateForm()">
                         <div class="row mb-3">
                           <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Name</label>
                           <div class="col-sm-10">
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               <input
                                 type="text"
                                 class="form-control"
-                                id="basic-icon-default-fullname"
+                                id="name"
                                 placeholder="Exemple Java"
                                 aria-label="John Doe"
                                 aria-describedby="basic-icon-default-fullname2"
@@ -155,8 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <!-- / Content -->
 
-            <!-- Footer -->
-            <footer class="content-footer footer bg-footer-theme">
+           <!-- Footer -->
+           <footer class="content-footer footer bg-footer-theme">
               <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
                 <div class="mb-2 mb-md-0">
                   ©
@@ -164,30 +164,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     document.write(new Date().getFullYear());
                   </script>
                   , made with ❤️ by
-                  <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
+                  Khalil Jeber
                 </div>
-                <div>
-                  <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-                  <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-
-                  <a
-                    href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Documentation</a
-                  >
-
-                  <a
-                    href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Support</a
-                  >
-                </div>
+                
               </div>
             </footer>
             <!-- / Footer -->
-
             <div class="content-backdrop fade"></div>
           </div>
           <!-- Content wrapper -->
@@ -200,14 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <!-- / Layout wrapper -->
 
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
-    </div>
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -223,6 +197,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
+
+    <script>
+  function validateForm() {
+    var name = document.getElementById("name").value;
+
+    if (name === "") {
+      alert("Name must be filled out");
+      return false; 
+    }
+    return true;
+  }
+</script>
 
     <!-- Page JS -->
 
