@@ -10,7 +10,7 @@ class FormationController {
     }
 
     public function getAll(): array {
-        $query = "SELECT * FROM formations";
+        $query = "SELECT f.*,t.name FROM formations as f inner join types as t on f.typeId=t.id ";
         $stmt = $this->pdo->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -69,4 +69,106 @@ class FormationController {
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([':id' => $id]);
     }
+
+
+    public function participate(int $idUser,int $idFormation): void {
+        $query = "INSERT INTO participate (idUser, idFormation)
+                  VALUES (:idUser, :idFormation)";
+        
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([
+            ':idUser' => $idUser,
+            ':idFormation' => $idFormation
+        ]);
+    }
+    
+    public function removeParticipation(int $idUser, int $idFormation): void {
+        $query = "DELETE FROM participate WHERE idUser = :idUser AND idFormation = :idFormation";
+    
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([
+            ':idUser' => $idUser,
+            ':idFormation' => $idFormation
+        ]);
+    }
+    public function favoris(int $idUser,int $idFormation): void {
+        $query = "INSERT INTO favoris (idUser, idFormation)
+                  VALUES (:idUser, :idFormation)";
+        
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([
+            ':idUser' => $idUser,
+            ':idFormation' => $idFormation
+        ]);
+    }
+
+    public function removeFavoris(int $idUser, int $idFormation): void {
+        $query = "DELETE FROM favoris WHERE idUser = :idUser AND idFormation = :idFormation";
+    
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([
+            ':idUser' => $idUser,
+            ':idFormation' => $idFormation
+        ]);
+    }
+
+    public function isParticipating(int $idUser, int $idFormation): bool {
+        $query = "SELECT COUNT(*) FROM participate WHERE idUser = :idUser AND idFormation = :idFormation";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([
+            ':idUser' => $idUser,
+            ':idFormation' => $idFormation
+        ]);
+        $count = $stmt->fetchColumn();
+        return $count > 0;
+    }
+
+    public function isFavoris(int $idUser, int $idFormation): bool {
+        $query = "SELECT COUNT(*) FROM favoris WHERE idUser = :idUser AND idFormation = :idFormation";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([
+            ':idUser' => $idUser,
+            ':idFormation' => $idFormation
+        ]);
+        $count = $stmt->fetchColumn();
+        return $count > 0;
+    }
+
+
+    public function getParticipatingFormations($idUser) {
+        $sql = "SELECT formations.*,types.name FROM formations
+                INNER JOIN participate ON formations.id = participate.idFormation INNER JOIN types ON formations.typeId=types.id
+                WHERE participate.idUser = :idUser";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function getWishlistFormations($idUser) {
+        $sql = "SELECT formations.*,types.name FROM formations
+                INNER JOIN favoris ON formations.id = favoris.idFormation INNER JOIN types ON formations.typeId=types.id
+                WHERE favoris.idUser = :idUser";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getFormationsByTitle($title) {
+        $sql = "SELECT formations.*,types.name FROM formations
+                 INNER JOIN types ON formations.typeId=types.id
+                WHERE formations.title LIKE '%$title%' ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

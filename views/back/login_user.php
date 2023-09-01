@@ -14,8 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['username'] = $user->getUsername();
         $_SESSION['role'] = $user->getRole();
         
-        
+        if($user->getRole()=="admin" || $user->getRole()=="teacher")
         header('Location: index.php'); 
+        else
+        header('Location: ../front/index.php');
         exit();
     } else {
         

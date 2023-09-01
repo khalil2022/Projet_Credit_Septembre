@@ -1,18 +1,18 @@
 <?php
-require_once '../../controllers/typeC.php';
+session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-   
-    $typeController = new TypeController();
-    $newType = new Type(null,$name);
-    $typeController->create($newType);
-    
-    header('Location: types_lists.php'); 
+if (!isset($_SESSION['username']) || ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'teacher')) {
+    header('Location: login.php'); 
     exit();
 }
 
+require_once '../../controllers/formationC.php';
+
+$formationsController = new FormationController();
+$formations = $formationsController->getAll();
+
 ?>
+
 
 <!DOCTYPE html>
 
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Basic Inputs - Forms | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+    <title>Tables - Basic Tables | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
 
     <meta name="description" content="" />
 
@@ -84,14 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
+
         <?php require './menubar.php';  ?>
         <!-- / Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-
           <?php require './navbar.php';  ?>
+          
 
           <!-- / Navbar -->
 
@@ -100,51 +101,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Forms /</span> Formation Type</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Tables /</span> Formations Table</h4>
 
-              <div class="row">
-                
-               <!-- Basic with Icons -->
-               <div class="col-xxl">
-                  <div class="card mb-4">
-                    <div class="card-header d-flex align-items-center justify-content-between">
-                      <h5 class="mb-0">Type</h5>
-                    <!--   <small class="text-muted float-end">Merged input group</small> -->
-                    </div>
-                    <div class="card-body">
-                      <form action="create_type.php" method="post">
-                        <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Name</label>
-                          <div class="col-sm-10">
-                            <div class="input-group input-group-merge">
-                              <span id="basic-icon-default-fullname2" class="input-group-text"
-                                ><i class="bx bx-user"></i
-                              ></span>
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="basic-icon-default-fullname"
-                                placeholder="Exemple Java"
-                                aria-label="John Doe"
-                                aria-describedby="basic-icon-default-fullname2"
-                                name="name"
-                              />
+             
+
+              <!-- Hoverable Table rows -->
+              <div class="card">
+                <h5 class="card-header">Formations</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                    <?php foreach ($formations as $formation): ?>
+                      <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?= $formation['title'] ?></strong></td>
+                        <td><?= $formation['description'] ?></td>
+                        <td><?= $formation['startDate'] ?></td>
+                        <td><?= $formation['endDate'] ?></td>
+                        <td><?= $formation['name'] ?></td>
+                       
+              
+                        <td>
+                          <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                              <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item" href="update_formation.php?id=<?= $formation['id'] ?>"
+                                ><i class="bx bx-edit-alt me-1"></i> Edit</a
+                              >
+                              <a class="dropdown-item" href="delete_formation_request.php?id=<?= $formation['id'] ?>" onclick="return confirm('Are you sure you want to delete this formation?')"
+                                ><i class="bx bx-trash me-1"></i> Delete</a
+                              >
                             </div>
                           </div>
-                        </div>
-                     
-                        <div class="row justify-content-end">
-                          <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Create</button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
+                        </td>
+                      </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
                 </div>
-
-               
               </div>
+              <!--/ Hoverable Table rows -->
+
+              <hr class="my-5" />
+
+             
             </div>
             <!-- / Content -->
 
@@ -218,8 +229,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="assets/js/main.js"></script>
 
     <!-- Page JS -->
-
-    <script src="assets/js/form-basic-inputs.js"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>

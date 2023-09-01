@@ -1,14 +1,22 @@
 <?php
+require_once '../../controllers/formationC.php';
 require_once '../../controllers/typeC.php';
 
+$typesController = new TypeController();
+$types = $typesController->getAll();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
+  $title = $_POST['title'];
+  $description = $_POST['description'];
+  $startDate = $_POST['startDate'];
+  $endDate = $_POST['endDate'];
+  $typeId = $_POST['typeId'];
    
-    $typeController = new TypeController();
-    $newType = new Type(null,$name);
-    $typeController->create($newType);
+    $formationController = new FormationController();
+    $newFormation = new Formation(null, $title, $description, $startDate, $endDate, $typeId);
+    $formationController->create($newFormation);
     
-    header('Location: types_lists.php'); 
+    header('Location: formations_lists.php'); 
     exit();
 }
 
@@ -100,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Forms /</span> Formation Type</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Forms /</span> Formation </h4>
 
               <div class="row">
                 
@@ -108,13 +116,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                <div class="col-xxl">
                   <div class="card mb-4">
                     <div class="card-header d-flex align-items-center justify-content-between">
-                      <h5 class="mb-0">Type</h5>
+                      <h5 class="mb-0">Formation</h5>
                     <!--   <small class="text-muted float-end">Merged input group</small> -->
                     </div>
                     <div class="card-body">
-                      <form action="create_type.php" method="post">
+                      <form action="create_formation.php" method="post">
                         <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Name</label>
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Title</label>
                           <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                               <span id="basic-icon-default-fullname2" class="input-group-text"
@@ -124,14 +132,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 type="text"
                                 class="form-control"
                                 id="basic-icon-default-fullname"
-                                placeholder="Exemple Java"
-                                aria-label="John Doe"
+                                placeholder="Title"
+                               
                                 aria-describedby="basic-icon-default-fullname2"
-                                name="name"
+                                name="title"
                               />
                             </div>
                           </div>
                         </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-message">Description</label>
+                          <div class="col-sm-10">
+                          <div class="input-group input-group-merge">
+                            <span id="basic-icon-default-message2" class="input-group-text"
+                              ><i class="bx bx-comment"></i
+                            ></span>
+                            <textarea
+                              id="basic-icon-default-message"
+                              class="form-control"
+                              placeholder="Description ..."
+                              aria-describedby="basic-icon-default-message2"
+                              name="description"
+                            ></textarea>
+                          </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Start Date</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span id="basic-icon-default-fullname2" class="input-group-text"
+                                ><i class="bx bx-calendar"></i
+                              ></span>
+                              <input
+                                type="date"
+                                class="form-control"
+                                id="basic-icon-default-fullname"
+                                placeholder="Title"
+                               
+                                aria-describedby="basic-icon-default-fullname2"
+                                name="startDate"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">End Date</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span id="basic-icon-default-fullname2" class="input-group-text"
+                                ><i class="bx bx-calendar"></i
+                              ></span>
+                              <input
+                                type="date"
+                                class="form-control"
+                                id="basic-icon-default-fullname"
+                                placeholder="Title"
+                               
+                                aria-describedby="basic-icon-default-fullname2"
+                                name="endDate"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                        <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Type</label>
+                        <div class="col-sm-10">
+                        <select class="form-select" id="exampleFormControlSelect1" name="typeId" aria-label="Default select example">
+                        <?php foreach ($types as $type): ?>
+                          <option value="<?= $type['id'] ?>"><?= $type['name'] ?></option>
+                        <?php endforeach; ?>
+                        </select>
+                      </div>
+                      </div>
                      
                         <div class="row justify-content-end">
                           <div class="col-sm-10">
