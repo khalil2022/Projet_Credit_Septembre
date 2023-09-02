@@ -82,8 +82,26 @@ class UserController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     public function getStatistics(): array {
-        $query = "SELECT DATE(date_join) AS registration_date, COUNT(*) AS user_count FROM users GROUP BY DATE(date_join)";
+        $tempTableQuery = "CREATE TEMPORARY TABLE IF NOT EXISTS months (month CHAR(2));";
+    
+        $insertMonthsQuery = "
+            INSERT INTO months (month)
+            VALUES ('01'), ('02'), ('03'), ('04'), ('05'), ('06'), ('07'), ('08'), ('09'), ('10'), ('11'), ('12');
+        ";
+    
+        $this->pdo->exec($tempTableQuery);
+        $this->pdo->exec($insertMonthsQuery);
+    
+        $query = "
+            SELECT m.month, IFNULL(COUNT(u.date_join), 0) AS user_count
+            FROM months m
+            LEFT JOIN users u ON MONTH(u.date_join) = m.month
+            GROUP BY m.month
+            ORDER BY m.month
+        ";
+    
         $stmt = $this->pdo->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

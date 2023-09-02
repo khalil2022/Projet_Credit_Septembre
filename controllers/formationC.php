@@ -204,5 +204,28 @@ class FormationController {
         }
 
     }
+
+
+    public function getFormationTypesStatistics(): array {
+        $query = "SELECT types.name, COUNT(formations.id) AS formation_count FROM types
+                  LEFT JOIN formations ON types.id = formations.typeId
+                  GROUP BY types.name";
+        
+        $stmt = $this->pdo->query($query);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        $labels = [];
+        $series = [];
+    
+        foreach ($data as $row) {
+            $labels[] = $row['name'];
+            $series[] = (int)$row['formation_count'];
+        }
+    
+        return [
+            'labels' => $labels,
+            'series' => $series
+        ];
+    }
     
 }
